@@ -72,6 +72,14 @@ function bindProductCardEvents() {
     });
   });
   $$('[data-quick-view]').forEach(button => button.addEventListener('click', () => openQuickView(button.dataset.quickView)));
+
+  /* Card click opens product image */
+  $$('[data-product-grid] .product-card').forEach(card => {
+    card.addEventListener('click', event => {
+      if (event.target.closest('button')) return;
+      openQuickView(card.dataset.productId);
+    });
+  });
 }
 
 function addToCart(productId, size) {
@@ -134,29 +142,50 @@ function closeCart() {
 
 function openQuickView(id) {
   quickViewProduct = products.find(p => p.id === id);
-  quickViewSize = 'M';
+  if (!quickViewProduct) return;
+
   const modal = $('[data-product-modal]');
-  $('[data-quick-view]').innerHTML = `
-    <div class="quick-view-image"><img src="${quickViewProduct.image}" alt="${quickViewProduct.name}" /></div>
-    <div class="quick-view-content">
-      <p class="eyebrow">${quickViewProduct.tag}</p>
-      <h2>${quickViewProduct.name}</h2>
-      <p class="quick-price">${money(quickViewProduct.price)}</p>
-      <p class="quick-desc">${quickViewProduct.description}</p>
-      <p class="quick-size-label">CHOOSE YOUR SIZE</p>
-      <div class="size-pills" data-quick-sizes>${['S','M','L','XL'].map(s => `<button class="size-pill ${s === 'M' ? 'active' : ''}" data-quick-size="${s}">${s}</button>`).join('')}</div>
-      <button class="button button-light quick-add" data-quick-add>Add to bag <span>↗</span></button>
-    </div>`;
-  $$('[data-quick-size]').forEach(button => button.addEventListener('click', () => {
-    quickViewSize = button.dataset.quickSize;
-    $$('[data-quick-size]').forEach(b => b.classList.remove('active'));
-    button.classList.add('active');
-  }));
-  $('[data-quick-add]').addEventListener('click', () => {
-    addToCart(quickViewProduct.id, quickViewSize);
-    modal.close();
-  });
+  const quickBox = $('[data-quick-view]');
+
+  if (modal.open) modal.close();
+
+  modal.classList.add('product-modal-large');
+
+  quickBox.innerHTML = `
+    <div class="zoom-product-stage">
+      <img class="zoom-product-image" src="${quickViewProduct.image}" alt="${quickViewProduct.name}">
+      <div class="zoom-product-title">${quickViewProduct.name}</div>
+    </div>
+  `;
+
   modal.showModal();
+
+  const img = quickBox.querySelector('.zoom-product-image');
+
+  function moveZoom(e) {
+    const r = img.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100;
+    const y = ((e.clientY - r.top) / r.height) * 100;
+    img.style.transformOrigin = `${x}% ${y}%`;
+  }
+
+  img.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    img.classList.add('is-zooming');
+    moveZoom(e);
+    img.setPointerCapture?.(e.pointerId);
+  });
+
+  img.addEventListener('pointermove', e => {
+    if (img.classList.contains('is-zooming')) moveZoom(e);
+  });
+
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
+    img.addEventListener(type, () => {
+      img.classList.remove('is-zooming');
+      img.style.transformOrigin = 'center';
+    });
+  });
 }
 
 function showToast(message) {
@@ -203,7 +232,11 @@ $('[data-search-trigger]').addEventListener('click', () => {
 $('[data-search-close]').addEventListener('click', () => $('[data-search-modal]').close());
 $('[data-search-input]').addEventListener('input', e => renderSearch(e.target.value));
 
-$('[data-modal-close]').addEventListener('click', () => $('[data-product-modal]').close());
+$('[data-modal-close]').addEventListener('click', () => {
+  $('[data-product-modal]').classList.remove('product-modal-large');
+  $('[data-quick-view]').innerHTML = '';
+  $('[data-product-modal]').close();
+});
 
 $('[data-newsletter-focus]').addEventListener('click', () => {
   $('#newsletter-email').focus();
@@ -229,5 +262,3 @@ $$('[data-mobile-nav] a').forEach(link => link.addEventListener('click', () => {
 
 renderProducts();
 renderCart();
-
-

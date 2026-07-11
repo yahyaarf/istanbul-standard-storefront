@@ -11,7 +11,11 @@ const products = [,
   { id: 'boss4-polo', name: 'Boss Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/boss4.png', description: 'Premium Turkish polo with a clean fit and strong fabric.' },
   { id: 'boss5-polo', name: 'Boss Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/boss5.png', description: 'Premium Turkish polo with a clean fit and strong fabric.' },
   { id: 'boss6-polo', name: 'Boss Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/boss6.png', description: 'Premium Turkish polo with a clean fit and strong fabric.' },
-  { id: 'ralph-polo', name: 'Ralph Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/ralph.png', description: 'Premium Turkish polo with a clean fit and strong fabric.' }
+  { id: 'ralph-polo', name: 'Ralph Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/ralph.png', description: 'Premium Turkish polo with a clean fit and strong fabric.' },
+  { id: 'ralph2-polo', name: 'Ralph Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/ralph2.png', description: 'Premium Turkish menswear with a clean fit and strong fabric.' },
+  { id: 'ralph3-polo', name: 'Ralph Polo', color: 'Premium', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/ralph3.png', description: 'Premium Turkish menswear with a clean fit and strong fabric.' },
+  { id: 'shirt1', name: 'Premium Shirt', color: 'Classic', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/shirt1.png', description: 'Premium Turkish menswear with a clean fit and strong fabric.' },
+  { id: 'shirt2', name: 'Premium Shirt', color: 'Classic', price: 699, tag: 'NEW DROP', group: 'new', image: 'assets/shirt2.png', description: 'Premium Turkish menswear with a clean fit and strong fabric.' }
 ];
 
 let selectedFilter = 'all';
